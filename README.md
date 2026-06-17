@@ -1,10 +1,12 @@
-### Установка и настройка DHCP сервера Kea
+### Установка DHCP сервера Kea и mySQL MariaDB
 
 ---
 - Ubuntu Server 24.04
 - RAM 2G
 - CPU 2
 - Disk 50
+- MySQL MariaDB
+- 192.168.0.0/24
 ---
 
 Перед установкой необходимо установить и настроить **MariaDB** для хранения
@@ -47,7 +49,17 @@ sudo apt install -y kea-dhcp4-server kea-admin libmariadb-dev
 ```shell
 sudo kea-admin db-init mysql -u kea -p 'ваш_надёжный_пароль' -n kea
 ```
+
 - Проверяем работу. Должны отобразиться таблицы (lease4, schema_version и др.).
 ```shell
 mysql -u kea -p -e "SHOW TABLES;" kea
 ```
+
+### Настройка DHCP
+
+- Делаем резервную копию конфигурационного файла 
+```shell
+sudo cp /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf.bak
+```
+
+
