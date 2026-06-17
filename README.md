@@ -42,7 +42,7 @@ EXIT;
 ```
 - Устанавливаем Kea.
 ```shell
-sudo apt install -y kea-dhcp4-server kea-admin libmariadb-dev
+sudo apt install -y kea-dhcp4-server kea-admin libmariadb-dev kea-ctrl-agent
 ```
 
 - Связываем Kea и MariaDB. Меняем пароль от DB. (Пароль лучше указывать в ковычках)
@@ -79,5 +79,12 @@ sudo apt install isc-stork-server
 sudo apt install isc-stork-agent
 ```
 -  Отредактируйте файл `/etc/kea/kea-ctrl-agent.conf`
+
+- Перезапускаем службы
+
+```shell
+sudo systemctl restart kea-dhcp4-server kea-ctrl-agent isc-stork-agent
+```
+
 
 
