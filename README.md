@@ -62,4 +62,4 @@ mysql -u kea -p -e "SHOW TABLES;" kea
 sudo cp /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf.bak
 ```
 
-
+- Редактируем содержимое  файла `/etc/kea/kea-dhcp4.conf` из примера **менаяем на свои данные**
