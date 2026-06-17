@@ -22,7 +22,7 @@ sudo timedatectl set-timezone Europe/Moscow
 ```
 - Устанавливаем mariadb.
 ```shell
-sudo apt install -y mariadb-server mariadb-client libmariadb-dev
+sudo apt install -y mariadb-server mariadb-client libmariadb-dev curl
 ```
 - Настраиваем mariadb.
 ```shell
@@ -63,3 +63,20 @@ sudo cp /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf.bak
 ```
 
 - Редактируем содержимое  файла `/etc/kea/kea-dhcp4.conf` из примера **менаяем на свои данные**
+
+### Настройка веб интерфейса Stork
+
+- Скачиваем и устанавливаем Stork сервер и агент
+
+```shell
+curl -1sLf 'https://dl.cloudsmith.io/public/isc/stork/cfg/setup/bash.deb.sh' | sudo bash
+```
+```shell
+sudo apt install isc-stork-server
+```
+
+```shell
+sudo apt install isc-stork-agent
+```
+
+
