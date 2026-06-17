@@ -78,5 +78,6 @@ sudo apt install isc-stork-server
 ```shell
 sudo apt install isc-stork-agent
 ```
+-  Отредактируйте файл `/etc/kea/kea-ctrl-agent.conf`
 
 
