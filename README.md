@@ -85,6 +85,11 @@ sudo apt install isc-stork-agent
 ```shell
 sudo systemctl restart kea-dhcp4-server kea-ctrl-agent isc-stork-agent
 ```
+- Агент нужно зарегистрировать на сервере Stork (токен будет показан при первом запуске сервера или его можно найти в логах `cat /var/log/stork/server.log`):
+```shell
+sudo systemctl start isc-stork-server.service && sudo systemctl enable isc-stork-server.service
+```
 
-
-
+```shell
+sudo stork-agent register http://localhost:8080 <токен>
+```
