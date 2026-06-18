@@ -1,6 +1,7 @@
 ### Установка DHCP сервера Kea и PostgreSQL
 
 [Документация Kea](https://kea.readthedocs.io/en/latest/arm/install.html)
+[Документация Stork](https://stork.readthedocs.io/en/latest/install.html)
 
 ---
 - Ubuntu Server 24.04
@@ -36,7 +37,7 @@ sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'your_postgres_admin
 
 - Создание баз данных для kea и stork
 ```shell
-sudo -u postgres psql <<EOF
+sudo -u postgres psql
 
 CREATE USER kea_user WITH PASSWORD 'kea_strong_password';
 CREATE DATABASE kea_db OWNER kea_user;
@@ -53,7 +54,6 @@ GRANT ALL PRIVILEGES ON DATABASE stork_db TO stork_user;
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 \q
-EOF
 ```
 - `sudo -u postgres psql -l` Проверка создания баз данных
 
