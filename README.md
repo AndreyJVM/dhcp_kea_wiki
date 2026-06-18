@@ -70,7 +70,19 @@ sudo apt update && sudo apt install -y kea-dhcp4-server kea-admin postgresql-cli
 ```shell
 sudo kea-admin db-init pgsql -h localhost -u kea_user -p "kea_strong_password" -n kea_db
 ```
+- Делам копию файла перед изменениями 
+```shell
+cp /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf.back
+```
+- меняем конфигурационный файл и вносим правки согласно подсети
+- проверяем синтаксис
 
 ```shell
-sudo nano /etc/kea/kea-dhcp4.conf
+sudo kea-dhcp4 -t /etc/kea/kea-dhcp4.conf
+```
+
+- Запускаем службу
+
+```shell
+sudo systemctl enable kea-dhcp4-server && sudo systemctl start kea-dhcp4-server
 ```
