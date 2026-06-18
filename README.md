@@ -1,97 +1,70 @@
-### Установка DHCP сервера Kea и mySQL MariaDB
+### Установка DHCP сервера Kea и PostgreSQL
 
+[Документация Kea](https://kea.readthedocs.io/en/latest/arm/install.html)
 ---
 - Ubuntu Server 24.04
 - RAM 2G
 - CPU 2
 - Disk 50
-- MySQL MariaDB
+- MySQL PostgresSQL
 - 192.168.0.0/24
 ---
-
-Перед установкой необходимо установить и настроить **MariaDB** для хранения
-данных об аренде, резервировании хостов, опциях, а также часть параметров конфигурации сервера.
+### Подготовка системы
 
 ```shell
-sudo apt update -y
-```
-
-- Замените на ваш часовой пояс.
-```shell
-sudo timedatectl set-timezone Europe/Moscow 
-```
-- Устанавливаем mariadb.
-```shell
-sudo apt install -y mariadb-server mariadb-client libmariadb-dev curl
-```
-- Настраиваем mariadb.
-```shell
-sudo mysql -u root -p
-```
-
-- Можете заменить пользователя, пароль и адрес DB.
-```shell
-CREATE DATABASE kea;
-CREATE USER 'kea'@'localhost' IDENTIFIED BY 'ваш_надёжный_пароль';
-GRANT ALL PRIVILEGES ON kea.* TO 'kea'@'localhost';
-FLUSH PRIVILEGES;
-# Рекомендации повышения производительности MariaDB
-SET GLOBAL innodb_flush_log_at_trx_commit=2;
-SHOW SESSION VARIABLES LIKE 'innodb_flush_log%';
-EXIT;
-```
-- Устанавливаем Kea.
-```shell
-sudo apt install -y kea-dhcp4-server kea-admin libmariadb-dev kea-ctrl-agent
-```
-
-- Связываем Kea и MariaDB. Меняем пароль от DB. (Пароль лучше указывать в ковычках)
-```shell
-sudo kea-admin db-init mysql -u kea -p 'ваш_надёжный_пароль' -n kea
-```
-
-- Проверяем работу. Должны отобразиться таблицы (lease4, schema_version и др.).
-```shell
-mysql -u kea -p -e "SHOW TABLES;" kea
-```
-
-### Настройка DHCP
-
-- Делаем резервную копию конфигурационного файла 
-```shell
-sudo cp /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf.bak
-```
-
-- Редактируем содержимое  файла `/etc/kea/kea-dhcp4.conf` из примера **менаяем на свои данные**
-
-### Настройка веб интерфейса Stork
-
-- Скачиваем и устанавливаем Stork сервер и агент
-
-```shell
-curl -1sLf 'https://dl.cloudsmith.io/public/isc/stork/cfg/setup/bash.deb.sh' | sudo bash
-```
-```shell
-sudo apt install isc-stork-server
+sudo apt update && sudo apt upgrade -y
 ```
 
 ```shell
-sudo apt install isc-stork-agent
-```
--  Отредактируйте файл `/etc/kea/kea-ctrl-agent.conf`
--  Отредактируйте файл `/etc/stork/agent.conf`
-- Перезапускаем службы
-
-```shell
-sudo systemctl restart kea-dhcp4-server kea-ctrl-agent isc-stork-agent
-```
-- Агент нужно зарегистрировать на сервере Stork (токен будет показан при первом запуске агента stork через `systemctl status isc-stork-agent`):
-- Пример: stork-agent[17796]: time="2026-06-17 17:47:41" level="info" msg="AGENT TOKEN: 7D24097991434r347B0F483179D5BF39134534527AE85763453450F3AE83453A55B9E" file="         register.go:451  " 
-
-```shell
-sudo systemctl start isc-stork-server.service && sudo systemctl enable isc-stork-server.service
+sudo timedatectl set-timezone Europe/Moscow
 ```
 
 ```shell
-sudo stork-agent register http://localhost:8080 <токен>
+sudo apt install -y wget curl net-tools gnupg2 software-properties-common
+```
+### Установка PostgreSQL
+
+```shell
+sudo apt install -y postgresql postgresql-contrib
+```
+
+```shell
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'your_postgres_admin_password';"
+```
+
+- Создание баз данных для kea и stork
+```shell
+sudo -u postgres psql <<EOF
+
+CREATE USER kea_user WITH PASSWORD 'kea_strong_password';
+CREATE DATABASE kea_db OWNER kea_user;
+GRANT ALL PRIVILEGES ON DATABASE kea_db TO kea_user;
+
+CREATE USER stork_user WITH PASSWORD 'stork_strong_password';
+CREATE DATABASE stork_db OWNER stork_user;
+
+\c stork_db
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+GRANT ALL PRIVILEGES ON DATABASE stork_db TO stork_user;
+
+\c kea_db
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+\q
+EOF
+```
+- `sudo -u postgres psql -l` Проверка создания баз данных
+
+### Установка Kea
+
+```shell
+curl -1sLf 'https://dl.cloudsmith.io/public/isc/kea-2-4/setup.deb.sh' | sudo bash
+```
+
+```shell
+sudo apt update && sudo apt install -y kea-dhcp4-server kea-admin postgresql-client kea-ctrl-agent
+```
+- Инициализация базы данных Kea
+```shell
+sudo kea-admin db-init pgsql -h localhost -u kea_user -p "kea_strong_password" -n kea_db
 ```
