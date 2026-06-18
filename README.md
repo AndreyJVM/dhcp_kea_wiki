@@ -109,3 +109,9 @@ cp /etc/kea/kea-ctrl-agent.conf /etc/kea/kea-ctrl-agent.conf.back
 ```shell
 sudo systemctl enable kea-ctrl-agent && sudo systemctl start kea-ctrl-agent
 ```
+
+```shell
+cp /etc/stork/agent.conf /etc/stork/agent.conf.back
+```
+
+
