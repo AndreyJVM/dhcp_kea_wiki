@@ -105,4 +105,7 @@ sudo /etc/stork/server.env /etc/stork/server.env.back
 ```shell
 cp /etc/kea/kea-ctrl-agent.conf /etc/kea/kea-ctrl-agent.conf.back
 ```
-
+-  Запускаем Control Agent
+```shell
+sudo systemctl enable kea-ctrl-agent && sudo systemctl start kea-ctrl-agent
+```
