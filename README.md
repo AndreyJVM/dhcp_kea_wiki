@@ -1,6 +1,7 @@
 ### Установка DHCP сервера Kea и PostgreSQL
 
 [Документация Kea](https://kea.readthedocs.io/en/latest/arm/install.html)
+
 ---
 - Ubuntu Server 24.04
 - RAM 2G
@@ -9,6 +10,7 @@
 - MySQL PostgresSQL
 - 192.168.0.0/24
 ---
+
 ### Подготовка системы
 
 ```shell
@@ -67,4 +69,8 @@ sudo apt update && sudo apt install -y kea-dhcp4-server kea-admin postgresql-cli
 - Инициализация базы данных Kea
 ```shell
 sudo kea-admin db-init pgsql -h localhost -u kea_user -p "kea_strong_password" -n kea_db
+```
+
+```shell
+sudo nano /etc/kea/kea-dhcp4.conf
 ```
