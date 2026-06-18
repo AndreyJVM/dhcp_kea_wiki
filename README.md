@@ -86,3 +86,17 @@ sudo kea-dhcp4 -t /etc/kea/kea-dhcp4.conf
 ```shell
 sudo systemctl enable kea-dhcp4-server && sudo systemctl start kea-dhcp4-server
 ```
+### Установка Stork (веб-интерфейс)
+
+```shell
+curl -1sLf 'https://dl.cloudsmith.io/public/isc/stork/setup.deb.sh' | sudo bash
+```
+
+```shell
+sudo apt update && sudo apt install -y isc-stork-server isc-stork-agent
+```
+- Настройка Stork Server
+- Делам копию перед изменениями
+```shell
+sudo /etc/stork/server.env /etc/stork/server.env.back
+```
