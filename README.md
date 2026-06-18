@@ -100,3 +100,9 @@ sudo apt update && sudo apt install -y isc-stork-server isc-stork-agent
 ```shell
 sudo /etc/stork/server.env /etc/stork/server.env.back
 ```
+
+- Настройка Kea Control Agent для Stork
+```shell
+cp /etc/kea/kea-ctrl-agent.conf /etc/kea/kea-ctrl-agent.conf.back
+```
+
